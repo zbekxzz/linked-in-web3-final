@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>  
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="nav-logo">Linked-out</a>
+                <a href="/profile" class="nav-link">Profile</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="profile">
+        <div class="container">
+            <div class="profile-title">Profile</div>
+            <div id="userInfo"></div>
+            <div class="user-posts">
+                <div class="posts-title">Posts</div>
+                <div id="userPosts"></div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <footer>
+        <div class="footer-rights">© 2024 Linked-out. All Rights Reserved</div>
+        <a href="/" class="footer-link">Linked-out</a>
+    </footer>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
+    <script>
+        let username;
+        // Fetch user information
+        fetch('/profileData')
+            .then(response => response.json())
+            .then(data => {
+                username = data.username;
+                console.log('Username:', username);
+                document.getElementById('userInfo').innerHTML = `
+                    <div class="profile-section">
+                        <div id="avatar" class="avatar"></div>
+                        <div class="title">Welcome, ${username}!</div>
+                        <button id="logoutBtn" class="btn" onclick="logout()">Logout</button>
+                    </div>
+                    <div class="profile-section info">
+                        <div class="profile-wrapper">
+                            <label>Update avatar image</label>
+                            <form>
+                                <input type="url" name="avatarInput" id="avatarInput" placeholder="URL">
+                                <button name="avatarBtn" id="avatarBtn" onclick="updateAvatar()">Send</button>
+                            </form>
+                        </div>
+                        <div class="profile-wrapper">
+                            <label>Full name</label>
+                            <p>${data.fullName}</p>
+                        </div>
+                        <div class="profile-wrapper">
+                            <label>Email</label>
+                            <p>${data.email}</p>
+                        </div>
+                        <div class="profile-wrapper">
+                            <label>Wallet Address</label>
+                            ${data.walletAddress != '' ? `<p>${data.walletAddress}</p>`: `<button id="walletBtn" class="btn" value="Connect Wallet" onclick="connect('${username}');">Connect</button>`}
+                        </div>
+                    </div>
+
+                    <div id="tokens" class="profile-section tokens">
+                        <div class="friends-title">Tokens</div>
+                        <div class="token-wrapper">
+                            <div class="token-name">ERC-20</div>
+                            <div id="erc-20" class="token-count">0</div>
+                        </div>
+                        <div class="token-wrapper">
+                            <div class="token-name">NFT</div>
+                            <div id="erc-721" class="token-count">0</div>
+                        </div>
+                        <button class="btn" onclick="updateTokens()">Update</button>
+                    </div>
+
+                    <div id="friends" class="profile-section friends">
+                        <div class="friends-title">Friends</div>
+                        <hr
+                    </div>
+                `;
+
+                const avatarDiv = document.getElementById("avatar");
+                avatarDiv.style.backgroundImage=`url(${data.avatarURL})`;
+
+                const friends = data.friends;
+                const friendsDiv = document.getElementById("friends");
+
+                friends.forEach((friend) => {
+                    friendsDiv.innerHTML += `
+                        <div class="user-wrapper">
+                            <a href="/profile/${friend}" class="friend-username">${friend}</a>
+                        </div>
+                    `
+                });
+                getPosts(username);
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+
+        function logout() {
+            fetch('/logout', { method: 'GET' })
+                .then(() => {
+                    window.location.href = '/';
+                })
+                .catch(error => console.error('Error logging out:', error));
+        }
+
+        async function connect(username) {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                const address = accounts[0];
+
+                await fetch('/updateWalletAddress', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        address
+                    })
+                });
+            } else {
+                console.log("No wallet");
+            }
+        }
+
+        async function getPosts(un) {
+            const postsDiv = document.getElementById("userPosts");
+            postsDiv.innerHTML = "";
+            console.log(un)
+            await fetch(`/posts/${un}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                data.forEach((post) => {
+                    postsDiv.innerHTML += `
+                        <div class="post-wrapper">
+                            <a href="/profile/${post.username}" class="post-link">${post.username}</a>
+                            <hr class="post-hr">
+                            <div class="post-title">${post.postTitle}</div>
+                            <div class="post-body">${post.postBody}</div>
+                            <hr class="post-hr">
+                            <form id="form" action="/posts/comment/${post.id}" method="post">
+                                <input id="post-input" class="post-input" type="text" placeholder="Send a comment" required>
+                                <button name="comment" id="postBtn" class="post-btn">Send</button>
+                            </form>
+                            <div id="postComments" class="post-comments"></div>
+                        </div>
+                    `;
+                    
+                    const commentDiv = document.querySelectorAll("#postComments");
+                    post.comments.forEach((comment) => {
+                        commentDiv[commentDiv.length-1].innerHTML += `
+                            <div class="comment-wrapper">
+                                <a href="/profile/${comment.username}" class="comment-author">${comment.username}</a>
+                                <div class="comment-body">${comment.commentBody}</div>    
+                            </div>
+                        `
+                    });
+                })
+            });
+        }
+
+        const submitButtons = document.querySelectorAll('.post-btn');
+
+        submitButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+
+                const form = this.closest('#form'); // Find the parent form element
+                const inputField = form.querySelector('#post-input'); // Find the input field within the form
+                
+                const comment = inputField.value;
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ commentBody: comment })
+                }).then(response => {
+                    getPosts();
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+
+                inputField.value = ''; // Clear the input field after submission
+            });
+        });
+
+        async function updateAvatar() {
+            try {
+                // Get the avatar input value
+                const avatarURL = document.getElementById("avatarInput").value;
+                // Send POST request to backend
+                await fetch("/updateAvatar", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ avatarURL })
+                })
+            } catch (error) {
+                console.error("There was a problem updating the avatar:", error);
+            }
+        }
+
+        async function updateTokens() {
+            try {
+                await fetch("/updateTokens", {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => { 
+                    console.log(data);
+                })
+            } catch (error) {
+                console.error("There was a problem updating the balance of wallet:", error);
+            }
+        }
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked-out</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="nav-logo">Linked-out</a>
+                <a href="/profile" class="nav-link">Profile</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h2>Welcome to Linked-out</h2>
+        <p>Connect with professionals around the world.</p>
+        <button id="heroBtn">Write Post</button>
+    </section>
+
+    <div id="myModal" class="modal">
+
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <form action="/posts" method="post">
+            <div class="modal-wrapper">
+                <label for="title">Title</label>
+                <input type="text" id="postTitle" placeholder="Title">
+            </div>
+          </form>
+        </div>
+      
+      </div>
+
+    <section class="main">
+        <div id="userPosts" class="main-posts">
+
+        </div>
+        <div id="users" class="profile-section friends main-friends">
+            <div class="friends-title">Users</div>
+            <hr>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-rights">© 2024 Linked-out. All Rights Reserved</div>
+        <a href="/" class="footer-link">Linked-out</a>
+    </footer>
+
+
+    <script>
+        async function getUsers() {
+            const postsDiv = document.getElementById("userPosts");
+            postsDiv.innerHTML = "";
+            await fetch(`/users`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                data.forEach((user) => {
+                    const username = user.username;
+                    const usernameDiv = document.getElementById("users");
+
+                    usernameDiv.innerHTML += `
+                        <div class="user-wrapper">
+                            <a href="/profile/${username}" class="friend-username">${username}</a>
+                        </div>
+                    `
+                });
+            });
+        }
+
+        async function getPosts() {
+            const postsDiv = document.getElementById("userPosts");
+            postsDiv.innerHTML = "";
+            await fetch(`/posts`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                data.forEach((post) => {
+                    postsDiv.innerHTML += `
+                        <div class="post-wrapper">
+                            <a href="/profile/${post.username}" class="post-link">${post.username}</a>
+                            <hr class="post-hr">
+                            <div class="post-title">${post.postTitle}</div>
+                            <div class="post-body">${post.postBody}</div>
+                            <hr class="post-hr">
+                            <form id="form" action="/posts/comment/${post.id}" method="post">
+                                <input id="post-input" class="post-input" type="text" placeholder="Send a comment" required>
+                                <button name="comment" id="postBtn" class="post-btn">Send</button>
+                            </form>
+                            <div id="postComments" class="post-comments"></div>
+                        </div>
+                    `;
+                    
+                    const commentDiv = document.querySelectorAll("#postComments");
+                    post.comments.forEach((comment) => {
+                        commentDiv[commentDiv.length-1].innerHTML += `
+                            <div class="comment-wrapper">
+                                <a href="/profile/${comment.username}" class="comment-author">${comment.username}</a>
+                                <div class="comment-body">${comment.commentBody}</div>    
+                            </div>
+                        `
+                    });
+                })
+            });
+        }
+        getPosts();
+        getUsers();
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="/" class="nav-logo">Linked-out</a>
+                <a href="/profile" class="nav-link">Profile</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="form">
+        <div class="container">
+            <div class="title">Register</div>
+            <p>Already have account? <a href="/login">Log in</a></p>
+            <form action="/register" method="post">
+                <div class="wrapper">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="wrapper">
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="wrapper">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="wrapper">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <input type="submit" value="Register">
+            </form>
+        </div>
+    </section>
+
+</body>
+</html>
