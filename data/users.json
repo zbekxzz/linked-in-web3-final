@@ -72,7 +72,15 @@
 		"fullName": "Mutigolla Shadyman",
 		"email": "shadik@mail.ru",
 		"password": "$2a$10$zaVZ.BzpN7lCFqL39plKFufVHYqB17nyjys44fwAWG9jVSdFDvxi2",
-		"friends": [],
+		"friends": [
+			"erk1nqz",
+			"bakha",
+			"user3",
+			"shadyman",
+			"aishakkk",
+			"tsarka",
+			"kisslinka"
+		],
 		"walletAddress": "0x15f4ce96c87bb1d43e0b832a8809a3c0bade7396",
 		"avatarURL": ""
 	},
