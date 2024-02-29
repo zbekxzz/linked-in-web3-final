@@ -214,24 +214,37 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ avatarURL })
-                })
+                });
+
+                // Update the avatar on the client side
+                const avatarDiv = document.getElementById("avatar");
+                avatarDiv.style.backgroundImage = `url(${avatarURL})`;
+
             } catch (error) {
                 console.error("There was a problem updating the avatar:", error);
             }
         }
 
+
         async function updateTokens() {
             try {
-                await fetch("/updateTokens", {
+                const response = await fetch("/updateTokens", {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                })
-                .then(response => response.json())
-                .then(data => { 
-                    console.log(data);
-                })
+                });
+
+                const data = await response.json();
+
+                // Update ERC-20 balance
+                const erc20BalanceElement = document.getElementById("erc-20");
+                erc20BalanceElement.textContent = data.erc20Balance;
+
+                // Update ERC-721 balance
+                const erc721BalanceElement = document.getElementById("erc-721");
+                erc721BalanceElement.textContent = data.erc721Balance;
+
             } catch (error) {
                 console.error("There was a problem updating the balance of wallet:", error);
             }

@@ -23,18 +23,21 @@
     </section>
 
     <div id="myModal" class="modal">
-
         <div class="modal-content">
-          <span class="close">&times;</span>
-          <form action="/posts" method="post">
-            <div class="modal-wrapper">
-                <label for="title">Title</label>
-                <input type="text" id="postTitle" placeholder="Title">
-            </div>
-          </form>
+            <span class="close" onclick="closeModal()">&times;</span>
+            <form id="postForm">
+                <div class="modal-wrapper">
+                    <label for="postTitle">Title</label>
+                    <input type="text" id="postTitle" placeholder="Title">
+                </div>
+                <div class="modal-wrapper">
+                    <label for="postBody">Body</label>
+                    <textarea id="postBody" placeholder="Write your post"></textarea>
+                </div>
+                <button type="button" onclick="submitPost()">Post</button>
+            </form>
         </div>
-      
-      </div>
+    </div>
 
     <section class="main">
         <div id="userPosts" class="main-posts">
@@ -53,6 +56,68 @@
 
 
     <script>
+        const modal = document.getElementById("myModal");
+
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        async function submitPost() {
+            const postTitle = document.getElementById("postTitle").value;
+            const postBody = document.getElementById("postBody").value;
+
+            try {
+                const response = await fetch("/posts", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ postTitle, postBody }),
+                });
+
+                if (response.ok) {
+                    closeModal();
+                    // После успешной отправки поста, обновите список постов
+                    getPosts();
+                } else {
+                    console.error('Failed to submit post');
+                }
+            } catch (error) {
+                console.error('Error submitting post:', error);
+            }
+        }
+
+        async function submitComment(postId) {
+            const inputField = document.getElementById(`post-input`);
+            const comment = inputField.value;
+
+            try {
+                const response = await fetch(`/posts/comment/${postId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ comment }),
+                });
+
+                if (response.ok) {
+                    // После успешной отправки комментария, обновите список комментариев для этого поста
+                    getPosts(postId);
+                } else {
+                    console.error('Failed to submit comment');
+                }
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+            }
+
+            inputField.value = ''; // Очистим поле ввода после отправки комментария
+        }
+
+
         async function getUsers() {
             const postsDiv = document.getElementById("userPosts");
             postsDiv.innerHTML = "";
@@ -100,7 +165,7 @@
                             <hr class="post-hr">
                             <form id="form" action="/posts/comment/${post.id}" method="post">
                                 <input id="post-input" class="post-input" type="text" placeholder="Send a comment" required>
-                                <button name="comment" id="postBtn" class="post-btn">Send</button>
+                                <button name="comment" id="postBtn" class="post-btn" onclick="submitComment(post.id)">Send</button>
                             </form>
                             <div id="postComments" class="post-comments"></div>
                         </div>

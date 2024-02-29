@@ -1040,30 +1040,30 @@ app.get('/profileData/:username', (req, res) => {
     res.json(userData);
 });
   
-app.post('/updateAvatar', (req, res) => {
-    console.log(req.body);
-    const { username, avatar } = req.body;
-
-    const user = users.find(u => u.username === username);
-
-    if (!user) {
-        console.log(username);
-        res.status(404).send('User not found');
-        return;
-    }
-
-    user.avatar = avatar;
-
-    fs.writeFile(__dirname + '/data/users.json', JSON.stringify(users), (err) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error saving user data');
-            return;
-        }
-        console.log(`Wallet address updated for ${username}: ${avatar}`);
-        res.sendStatus(200);
-    });
-});
+// app.post('/updateAvatar', (req, res) => {
+//     console.log(req.body);
+//     const { username, avatar } = req.body;
+//
+//     const user = users.find(u => u.username === username);
+//
+//     if (!user) {
+//         console.log(username);
+//         res.status(404).send('User not found');
+//         return;
+//     }
+//
+//     user.avatar = avatar;
+//
+//     fs.writeFile(__dirname + '/data/users.json', JSON.stringify(users), (err) => {
+//         if (err) {
+//             console.error(err);
+//             res.status(500).send('Error saving user data');
+//             return;
+//         }
+//         console.log(`Wallet address updated for ${username}: ${avatar}`);
+//         res.sendStatus(200);
+//     });
+// });
   
 app.post('/updateWalletAddress', async (req, res) => {
     const { username, address } = req.body;
@@ -1210,29 +1210,53 @@ app.get('/posts/', (req, res) => {
     const user = req.session.user;
     res.json(posts);
 });
-  
-app.post('/posts/', (req, res) => {
+
+app.post('/posts', async (req, res) => {
     const user = req.session.user;
-    const { postTitle, postBody} = req.body;
+    const userInfo = users.find(u => u.username === user);
+    const walletAddress = userInfo.walletAddress;
+    const userName = userInfo.username;
+
+    // Проверка баланса ERC-721 токенов
+    const erc721Balance = await nftContract.methods.balanceOf(walletAddress).call();
+    if (erc721Balance === 0n) {
+        res.status(400).send('You dont have NFT');
+        return;
+    }
+
+    const { postTitle, postBody } = req.body;
     if (!user) {
         res.redirect('/login');
         return;
     }
-    let id = posts.length + 1;
-    posts.push({ id, user, postTitle, postBody, comments: []});
+
+    const id = posts.length + 1;
+    posts.push({ id, userName, postTitle, postBody, comments: [] });
+
     fs.writeFile(__dirname + '/data/posts.json', JSON.stringify(posts), (err) => {
         if (err) {
             console.error(err);
             res.status(500).send('Error saving post data');
             return;
         }
+
+        res.sendStatus(200);
     });
 });
-  
-app.post('/posts/comment/:id', (req, res) => {
+
+app.post('/posts/comment/:id', async (req, res) => {
     const user = req.session.user;
-    const { id } = req.params;
-    const { comment } = req.body;
+    const {id} = req.params;
+    const {comment} = req.body;
+    const userInfo = users.find(u => u.username === user);
+    const walletAddress = userInfo.walletAddress;
+    console.log(id);
+    // Проверка баланса ERC-721 токенов
+    const erc721Balance = await nftContract.methods.balanceOf(walletAddress).call();
+    if (erc721Balance === 0n) {
+        res.status(400).send('You dont have NFT');
+        return;
+    }
     if (!user) {
         res.redirect('/login');
         return;
