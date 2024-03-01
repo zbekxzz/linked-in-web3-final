@@ -1,1 +1,113 @@
-[{"username":"bigbob","fullName":"Karakuzov Bekbolat","email":"221169@astanait.edu.kz","password":"$2b$10$DnGCFDzaG1bL5WVsn3XSy.RK.hZoqXdDzm2dRLjGgDfDgIgGXJwBO","friends":["user2","user3"],"walletAddress":"","avatarURL":""},{"username":"cristianoronaldo","fullName":"Mutigolla Shadyman","email":"mshadyman@gmail.com","password":"$2b$10$nA2U7ZhEMxWpB2UHSCuz9eF2lTCLsSUDDb5Jw5xXvOluCjX20mNHu","friends":["user1"],"walletAddress":"","avatarURL":""},{"username":"messi30","fullName":"Sagatbekov Alikhan","email":"alikhan@mail.ru","password":"$2b$10$Cq9QAP2nI4P6ClXs7vPbRu/sX7XkOKiCLuACZGpwhI7zUyjQiwOgm","friends":["user1"],"walletAddress":"","avatarURL":""},{"username":"zbekxzz","fullName":"Karakuzov Bekbolat","email":"forestnatplay@yandex.ru","password":"$2a$10$Dgh/bH9VGGU6ACOxVOPO0uLh1hEcHcMNCJy2kiM5d8xF5Y8PLOmPS","friends":["erk1nqz","bakha","user3","shadyman","aishakkk","tsarka","kisslinka","rakhat","rakhat"],"walletAddress":"0x3568307f9264cc92636648d176a903b3238412e1","friendRequests":["withoutNFT"],"avatarURL":"https://pushinka.top/uploads/posts/2023-04/1680944641_pushinka-top-p-avatarki-dlya-shkolnogo-chata-avatarka-ins-16.jpg"},{"username":"erk1nqz","fullName":"Erkinkyzy Bakyt","email":"221326@astanait.edu.kz","password":"$2a$10$bFbGeefzkprs1/tT4zLyw.58QH/34ss2ydD9fsGOfIi/95.i3L9Pa","friends":["shadyman","zbekxzz"],"walletAddress":"0xc97187e2c98e2e85d89adf45683fd486bbbf8caf","friendRequests":[{"from":{"username":"zbekxzz","fullName":"Karakuzov Bekbolat","email":"forestnatplay@yandex.ru","password":"$2a$10$Dgh/bH9VGGU6ACOxVOPO0uLh1hEcHcMNCJy2kiM5d8xF5Y8PLOmPS","friends":["erk1nqz","bakha","user3","shadyman","aishakkk","tsarka","kisslinka"],"walletAddress":"0x3568307f9264cc92636648d176a903b3238412e1","friendRequests":["rakhat","withoutNFT"],"avatarURL":"https://pushinka.top/uploads/posts/2023-04/1680944641_pushinka-top-p-avatarki-dlya-shkolnogo-chata-avatarka-ins-16.jpg"}}],"avatarURL":"https://cdn1.iconfinder.com/data/icons/avatars-1-5/136/87-1024.png"},{"username":"bakha","fullName":"Bakhtiyar","email":"bakha@mail.ru","password":"$2a$10$p5o6nQDt7hChJs.O1/LBvuQ4E.gbrMIaLFtKAHksdYI0dhcyEcyw2","friends":[],"walletAddress":"0xc97187e2c98e2e85d89adf45683fd486bbbf8caf","avatarURL":""},{"username":"shadyman","fullName":"Mutigolla Shadyman","email":"shadik@mail.ru","password":"$2a$10$zaVZ.BzpN7lCFqL39plKFufVHYqB17nyjys44fwAWG9jVSdFDvxi2","friends":["erk1nqz","bakha","user3","shadyman","aishakkk","tsarka","kisslinka"],"walletAddress":"0x15f4ce96c87bb1d43e0b832a8809a3c0bade7396","avatarURL":""},{"username":"rakhat","fullName":"Rakhat Zhaishylyk","email":"rakhatzhaishylyk@mail.ru","password":"$2a$10$mYRPCcYYWGyRqeLgRktDcu6l1Xas.0a/N36JG1atTdKTMRsHeEwOO","friends":[],"walletAddress":"","friendRequests":[],"avatarURL":""},{"username":"withoutNFT","fullName":"Account WithoutNFT","email":"farmelo001@mail.ru","password":"$2a$10$V7XJRWmqxXvps1FyGQFmDudbZ0lJSrwzZg5nqIohqAdnG3RogfLO2","friends":[],"walletAddress":"0x15f4ce96c87bb1d43e0b832a8809a3c0bade7396","friendRequests":[],"avatarURL":""}]
+[
+	{
+		"username": "bigbob",
+		"fullName": "Karakuzov Bekbolat",
+		"email": "221169@astanait.edu.kz",
+		"password": "$2b$10$DnGCFDzaG1bL5WVsn3XSy.RK.hZoqXdDzm2dRLjGgDfDgIgGXJwBO",
+		"friends": [
+			"user2",
+			"user3"
+		],
+		"walletAddress": "",
+		"avatarURL": ""
+	},
+	{
+		"username": "cristianoronaldo",
+		"fullName": "Mutigolla Shadyman",
+		"email": "mshadyman@gmail.com",
+		"password": "$2b$10$nA2U7ZhEMxWpB2UHSCuz9eF2lTCLsSUDDb5Jw5xXvOluCjX20mNHu",
+		"friends": [
+			"user1"
+		],
+		"walletAddress": "",
+		"avatarURL": ""
+	},
+	{
+		"username": "messi30",
+		"fullName": "Sagatbekov Alikhan",
+		"email": "alikhan@mail.ru",
+		"password": "$2b$10$Cq9QAP2nI4P6ClXs7vPbRu/sX7XkOKiCLuACZGpwhI7zUyjQiwOgm",
+		"friends": [
+			"user1"
+		],
+		"walletAddress": "",
+		"avatarURL": ""
+	},
+	{
+		"username": "zbekxzz",
+		"fullName": "Karakuzov Bekbolat",
+		"email": "forestnatplay@yandex.ru",
+		"password": "$2a$10$Dgh/bH9VGGU6ACOxVOPO0uLh1hEcHcMNCJy2kiM5d8xF5Y8PLOmPS",
+		"friends": [
+			"erk1nqz",
+			"bakha",
+			"user3",
+			"shadyman",
+			"aishakkk",
+			"tsarka",
+			"kisslinka"
+		],
+		"walletAddress": "0x3568307f9264cc92636648d176a903b3238412e1",
+		"friendRequests": [
+			"rakhat",
+            "withoutNFT"
+		],
+		"avatarURL": "https://pushinka.top/uploads/posts/2023-04/1680944641_pushinka-top-p-avatarki-dlya-shkolnogo-chata-avatarka-ins-16.jpg"
+	},
+	{
+		"username": "erk1nqz",
+		"fullName": "Erkinkyzy Bakyt",
+		"email": "221326@astanait.edu.kz",
+		"password": "$2a$10$bFbGeefzkprs1/tT4zLyw.58QH/34ss2ydD9fsGOfIi/95.i3L9Pa",
+		"walletAddress": "0xc97187e2c98e2e85d89adf45683fd486bbbf8caf",
+		"avatarURL": ""
+	},
+	{
+		"username": "bakha",
+		"fullName": "Bakhtiyar",
+		"email": "bakha@mail.ru",
+		"password": "$2a$10$p5o6nQDt7hChJs.O1/LBvuQ4E.gbrMIaLFtKAHksdYI0dhcyEcyw2",
+		"friends": [],
+		"walletAddress": "0xc97187e2c98e2e85d89adf45683fd486bbbf8caf",
+		"avatarURL": ""
+	},
+	{
+		"username": "shadyman",
+		"fullName": "Mutigolla Shadyman",
+		"email": "shadik@mail.ru",
+		"password": "$2a$10$zaVZ.BzpN7lCFqL39plKFufVHYqB17nyjys44fwAWG9jVSdFDvxi2",
+		"friends": [
+			"erk1nqz",
+			"bakha",
+			"user3",
+			"shadyman",
+			"aishakkk",
+			"tsarka",
+			"kisslinka"
+		],
+		"walletAddress": "0x15f4ce96c87bb1d43e0b832a8809a3c0bade7396",
+		"avatarURL": ""
+	},
+	{
+		"username": "rakhat",
+		"fullName": "Rakhat Zhaishylyk",
+		"email": "rakhatzhaishylyk@mail.ru",
+		"password": "$2a$10$mYRPCcYYWGyRqeLgRktDcu6l1Xas.0a/N36JG1atTdKTMRsHeEwOO",
+		"friends": [],
+		"walletAddress": "",
+		"friendRequests": [
+			"zbekxzz"
+		],
+		"avatarURL": ""
+	},
+	{
+		"username": "withoutNFT",
+		"fullName": "Account WithoutNFT",
+		"email": "farmelo001@mail.ru",
+		"password": "$2a$10$V7XJRWmqxXvps1FyGQFmDudbZ0lJSrwzZg5nqIohqAdnG3RogfLO2",
+		"friends": [],
+		"walletAddress": "0x15f4ce96c87bb1d43e0b832a8809a3c0bade7396",
+		"friendRequests": [],
+		"avatarURL": ""
+	}
+]

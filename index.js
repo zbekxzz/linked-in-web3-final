@@ -1148,13 +1148,10 @@ app.post('/friend-request/:action/:username', (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
-    // Находим принимающего и отправителя в массиве пользователей
-    const accepterUser = users.find(user => user.username === currentUser);
-    const requesterUser = users.find(user => user.username === username);
-
-    // Проверяем, что пользователи существуют
-    if (!accepterUser || !requesterUser) {
-        return res.status(404).json({ message: 'Пользователь не найден' });
+    // Проверка имени пользователя
+    const friend = users.find(user => user.username === username);
+    if (!friend) {
+        return res.status(400).send('Invalid friend username');
     }
 
     // Удаляем запрос из друзей и добавляем друга
