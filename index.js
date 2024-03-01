@@ -1138,24 +1138,29 @@ app.post('/add-friend', (req, res) => {
 app.post('/friend-request/:action/:username', (req, res) => {
     const { action } = req.params;
     const { username } = req.params; // Предполагается имя пользователя друга, отправившего запрос
-
+    console.log(action, username);
     // Проверка аутентификации текущего пользователя
     const currentUser = req.session.user;
     if (!currentUser) {
         return res.status(401).send('Unauthorized');
     }
 
-    // Проверка имени пользователя
-    const friend = users.find(user => user.username === username);
-    if (!friend) {
-        return res.status(400).send('Invalid friend username');
+    // Находим принимающего и отправителя в массиве пользователей
+    const accepterUser = users.find(user => user.username === currentUser);
+    const requesterUser = users.find(user => user.username === username);
+
+    // Проверяем, что пользователи существуют
+    if (!accepterUser || !requesterUser) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
     }
 
-    // Подтверждение наличия запроса
-    const friendRequest = friend.friendRequests.find(request => request.from === username);
-    if (!friendRequest) {
-        return res.status(400).send('No friend request found');
-    }
+    // Удаляем запрос из друзей и добавляем друга
+    accepterUser.friendRequests = accepterUser.friendRequests.filter(request => request !== username);
+    accepterUser.friends.push(username);
+
+
+    // Удаляем запрос из списка отправителя
+    requesterUser.friendRequests = requesterUser.friendRequests.filter(request => request !== currentUser);
 
     // Проверка действия
     if (action !== 'accept' && action !== 'reject') {
@@ -1165,11 +1170,13 @@ app.post('/friend-request/:action/:username', (req, res) => {
     // Обработка запроса в зависимости от действия:
     if (action === 'accept') {
         // Добавление друзей в списки друг друга
-        currentUser.friends.push(username);
-        friend.friends.push(currentUser);
+        accepterUser.friendRequests = accepterUser.friendRequests.filter(request => request !== username);
+        accepterUser.friends.push(username);
 
-        // Удаление запроса из списка друзей
-        friend.friendRequests.splice(friend.friendRequests.indexOf(friendRequest), 1);
+
+        // Удаляем запрос из списка отправителя
+        requesterUser.friendRequests = requesterUser.friendRequests.filter(request => request !== currentUser);
+
 
         // Обновление users.json
         fs.writeFile(__dirname + '/data/users.json', JSON.stringify(users), (err) => {
@@ -1181,9 +1188,10 @@ app.post('/friend-request/:action/:username', (req, res) => {
             console.log(`${currentUser} и ${username} теперь друзья`);
             res.sendStatus(200);
         });
-    } else { // action === 'reject'
+    }
+     else { // action === 'reject'
         // Удаление запроса из списка друзей
-        friend.friendRequests.splice(friend.friendRequests.indexOf(friendRequest), 1);
+        requesterUser.friendRequests = requesterUser.friendRequests.filter(request => request !== currentUser);
 
         // Обновление users.json
         fs.writeFile(__dirname + '/data/users.json', JSON.stringify(users), (err) => {
