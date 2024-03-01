@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="style.css">
+    <title>User profile</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <header>
@@ -27,6 +27,11 @@
         </div>
     </section>
 
+    <footer>
+        <div class="footer-rights">© 2024 Linked-out. All Rights Reserved</div>
+        <a href="/" class="footer-link">Linked-out</a>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
     <script>
         const path = window.location.pathname;
@@ -44,7 +49,7 @@
                         <div class="title">${username}!</div>
                         <button id="friendBtn" class="btn" onclick="addFriend()">Add friend</button>
                     </div>
-                    <div class="profile-section info">
+                    <div class="profile-section info-user">
                         <div class="profile-wrapper">
                             <label>Full name</label>
                             <p>${data.fullName}</p>
@@ -55,15 +60,114 @@
                         </div>
                         <div class="profile-wrapper">
                             <label>Wallet Address</label>
-                            ${data.walletAddress != '' ? `<p>${data.walletAddress}</p>`: `<button id="walletBtn" class="btn" value="Connect Wallet" onclick="connect('${username}');">Connect</button>`}
+                            ${data.walletAddress != '' ? `<p>${data.walletAddress.slice(0, 10)}...</p>`: `<p>No Wallet Address yet</p>`}
                         </div>
                     </div>
-                    <div class="profile-section">
-                        .
+                    <div id="friends" class="profile-section friends">
+                        <div class="friends-title">Friends</div>
                     </div>
                 `;
+
+                const avatarDiv = document.getElementById("avatar");
+                avatarDiv.style.backgroundImage=`url(${data.avatarURL})`;
+
+                const friends = data.friends;
+                const friendsDiv = document.getElementById("friends");
+
+                friends.forEach((friend) => {
+                    friendsDiv.innerHTML += `
+                        <div class="user-wrapper">
+                            <a href="/profile/${friend}" class="friend-username">${friend}</a>
+                        </div>
+                    `
+                });
+
+                getPosts(username);
+
             })
             .catch(error => console.error('Error fetching user data:', error));
+
+            async function getPosts(un) {
+                const postsDiv = document.getElementById("userPosts");
+                postsDiv.innerHTML = "";
+                console.log(un)
+                await fetch(`/posts/${un}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach((post) => {
+                        postsDiv.innerHTML += `
+                            <div class="post-wrapper">
+                                <a href="/profile/${post.username}" class="post-link">${post.username}</a>
+                                <hr class="post-hr">
+                                <div class="post-title">${post.postTitle}</div>
+                                <div class="post-body">${post.postBody}</div>
+                                <hr class="post-hr">
+                                <form id="form" action="/posts/comment/${post.id}" method="post">
+                                    <input id="post-input" class="post-input" type="text" placeholder="Send a comment" required>
+                                    <button name="comment" id="postBtn" class="post-btn">Send</button>
+                                </form>
+                                <div id="postComments" class="post-comments"></div>
+                            </div>
+                        `;
+                        
+                        const commentDiv = document.querySelectorAll("#postComments");
+                        post.comments.forEach((comment) => {
+                            commentDiv[commentDiv.length-1].innerHTML += `
+                                <div class="comment-wrapper">
+                                    <a href="/profile/${comment.username}" class="comment-author">${comment.username}</a>
+                                    <div class="comment-body">${comment.commentBody}</div>    
+                                </div>
+                            `
+                        });
+                    })
+                });
+            }
+        
+        const submitButtons = document.querySelectorAll('.post-btn');
+
+        submitButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+
+                const form = this.closest('#form'); // Find the parent form element
+                const inputField = form.querySelector('#post-input'); // Find the input field within the form
+                
+                const comment = inputField.value;
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ commentBody: comment })
+                }).then(response => {
+                    getPosts();
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+
+                inputField.value = ''; // Clear the input field after submission
+            });
+        });
+
+        async function addFriend() {
+            await fetch(`/add-friend`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ friendUsername: username })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                });
+        }
+
     </script>
 </body>
 </html>

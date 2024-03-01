@@ -152,12 +152,12 @@
     },
     {
         "id": 15,
-        "username": "user3",
+        "username": "erk1nqz",
         "postTitle": "Fifteenth Post",
         "postBody": "Ut tincidunt, neque id dictum venenatis, turpis purus interdum lorem, vel commodo libero felis auctor odio. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
         "comments": [
             {
-                "username": "user1",
+                "username": "zbekxzz",
                 "commentBody": "Keep it up!"
             }
         ]
@@ -197,7 +197,7 @@
     },
     {
         "id": 20,
-        "username": "user4",
+        "username": "erk1nqz",
         "postTitle": "Twentieth Post",
         "postBody": "Vivamus sit amet felis nec urna faucibus vestibulum. Nulla nec libero in enim dictum pharetra nec eget neque. Aliquam erat volutpat. Sed interdum, tortor nec accumsan elementum, tortor elit fermentum elit, at volutpat lorem velit id arcu.",
         "comments": []
