@@ -87,7 +87,9 @@
 
                     <div id="friends" class="profile-section friends">
                         <div class="friends-title">Friends</div>
-                        <hr
+                    </div>
+                    <div id="requests" class="profile-section friends">
+                        <div class="friends-title">Requests</div>
                     </div>
                 `;
 
@@ -104,7 +106,22 @@
                         </div>
                     `
                 });
+
+                const requests = data.friendRequests;
+                const requestsDiv = document.getElementById("requests");
+
+                requests.forEach((request) => {
+                    requestsDiv.innerHTML += `
+                        <div class="request-wrapper">
+                            <a href="/profile/${request}" class="friend-username">${request}</a>
+                            <button onclick="acceptRequest('${request}')" class="request-btn">+</button>
+                            <button onclick="rejectRequest('${request}')" class="request-btn red">-</button>
+                        </div>
+                    `
+                });
+
                 getPosts(username);
+                updateTokens();
             })
             .catch(error => console.error('Error fetching user data:', error));
 
@@ -176,7 +193,7 @@
                 })
             });
         }
-
+        
         const submitButtons = document.querySelectorAll('.post-btn');
 
         submitButtons.forEach(button => {
@@ -244,9 +261,25 @@
                 // Update ERC-721 balance
                 const erc721BalanceElement = document.getElementById("erc-721");
                 erc721BalanceElement.textContent = data.erc721Balance;
-
+                console.log(data.erc721Balance, data.erc20Balance);
             } catch (error) {
                 console.error("There was a problem updating the balance of wallet:", error);
+            }
+        }
+
+        async function acceptRequest(requestUsername) {
+            try {
+                const response = await fetch(`/friend-request/accept/${requestUsername}`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+            } catch (error) {
+                console.error("There was a problem accepting to the frient requests:", error);
             }
         }
         

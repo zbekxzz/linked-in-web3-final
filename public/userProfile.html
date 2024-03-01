@@ -20,23 +20,29 @@
         <div class="container">
             <div class="profile-title">Profile</div>
             <div id="userInfo"></div>
-            <div id="userFriends"></div>
+            <div class="user-posts">
+                <div class="posts-title">Posts</div>
+                <div id="userPosts"></div>
+            </div>
         </div>
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
-    <!-- <script>
-        let username;
+    <script>
+        const path = window.location.pathname;
+        const parts = path.split('/');
+        const username = parts[parts.length - 1];
+
         // Fetch user information
-        fetch('/profileData:')
+        fetch(`/profileData/${username}`)
             .then(response => response.json())
             .then(data => {
-                username = data.username;
                 console.log('Username:', username);
                 document.getElementById('userInfo').innerHTML = `
-                    <div class="profile-section">
-                        <div class="avatar" style="background-image: url(${data.avatar}); background-size: cover;"></div>
-                        <div class="title">Welcome, ${username}!</div>
+                <div class="profile-section">
+                        <div id="avatar" class="avatar"></div>
+                        <div class="title">${username}!</div>
+                        <button id="friendBtn" class="btn" onclick="addFriend()">Add friend</button>
                     </div>
                     <div class="profile-section info">
                         <div class="profile-wrapper">
@@ -58,6 +64,6 @@
                 `;
             })
             .catch(error => console.error('Error fetching user data:', error));
-    </script> -->
+    </script>
 </body>
 </html>

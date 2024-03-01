@@ -19,23 +19,26 @@
     <section class="hero">
         <h2>Welcome to Linked-out</h2>
         <p>Connect with professionals around the world.</p>
-        <button id="heroBtn">Write Post</button>
+        <button id="heroBtn" onclick="openModal()">Write Post</button>
     </section>
 
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <form id="postForm">
-                <div class="modal-wrapper">
-                    <label for="postTitle">Title</label>
-                    <input type="text" id="postTitle" placeholder="Title">
-                </div>
-                <div class="modal-wrapper">
-                    <label for="postBody">Body</label>
-                    <textarea id="postBody" placeholder="Write your post"></textarea>
-                </div>
-                <button type="button" onclick="submitPost()">Post</button>
-            </form>
+            <div class="modal-flex">
+                <div class="form-title">Write a post</div>
+                <form id="postForm">
+                    <div class="modal-wrapper">
+                        <label for="postTitle">Title</label>
+                        <input type="text" id="postTitle" required>
+                    </div>
+                    <div class="modal-wrapper">
+                        <label for="postBody">Body</label>
+                        <textarea id="postBody" required></textarea>
+                    </div>
+                    <button type="button" onclick="submitPost()">Post</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -56,6 +59,7 @@
 
 
     <script>
+        
         const modal = document.getElementById("myModal");
 
         function openModal() {
@@ -92,7 +96,7 @@
         }
 
         async function submitComment(postId) {
-            const inputField = document.getElementById(`post-input`);
+            const inputField = document.getElementById(`post-input${postId}`);
             const comment = inputField.value;
 
             try {
@@ -106,7 +110,7 @@
 
                 if (response.ok) {
                     // После успешной отправки комментария, обновите список комментариев для этого поста
-                    getPosts(postId);
+                    getPosts();
                 } else {
                     console.error('Failed to submit comment');
                 }
@@ -163,9 +167,9 @@
                             <div class="post-title">${post.postTitle}</div>
                             <div class="post-body">${post.postBody}</div>
                             <hr class="post-hr">
-                            <form id="form" action="/posts/comment/${post.id}" method="post">
-                                <input id="post-input" class="post-input" type="text" placeholder="Send a comment" required>
-                                <button name="comment" id="postBtn" class="post-btn" onclick="submitComment(post.id)">Send</button>
+                            <form id="form">
+                                <input id="post-input${post.id}" class="post-input" type="text" placeholder="Send a comment" required>
+                                <button name="comment" id="postBtn" class="post-btn" onclick="submitComment(${post.id})">Send</button>
                             </form>
                             <div id="postComments" class="post-comments"></div>
                         </div>

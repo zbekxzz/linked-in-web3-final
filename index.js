@@ -1077,7 +1077,6 @@ app.post('/updateWalletAddress', async (req, res) => {
     }
 
     user.walletAddress = address;
-    await transferTokens(address, 1);
 
     fs.writeFile(__dirname + '/data/users.json', JSON.stringify(users), (err) => {
         if (err) {
@@ -1211,7 +1210,7 @@ app.get('/posts/', (req, res) => {
     res.json(posts);
 });
 
-app.post('/posts', async (req, res) => {
+app.post('/posts', requireAuth, async (req, res) => {
     const user = req.session.user;
     const userInfo = users.find(u => u.username === user);
     const walletAddress = userInfo.walletAddress;
@@ -1225,10 +1224,6 @@ app.post('/posts', async (req, res) => {
     }
 
     const { postTitle, postBody } = req.body;
-    if (!user) {
-        res.redirect('/login');
-        return;
-    }
 
     const id = posts.length + 1;
     posts.push({ id, userName, postTitle, postBody, comments: [] });
@@ -1246,6 +1241,10 @@ app.post('/posts', async (req, res) => {
 
 app.post('/posts/comment/:id', async (req, res) => {
     const user = req.session.user;
+    if (!user) {
+        res.redirect('/login');
+        return;
+    }
     const {id} = req.params;
     const {comment} = req.body;
     const userInfo = users.find(u => u.username === user);
@@ -1255,10 +1254,6 @@ app.post('/posts/comment/:id', async (req, res) => {
     const erc721Balance = await nftContract.methods.balanceOf(walletAddress).call();
     if (erc721Balance === 0n) {
         res.status(400).send('You dont have NFT');
-        return;
-    }
-    if (!user) {
-        res.redirect('/login');
         return;
     }
     const post = posts.find(p => p.id == id);
@@ -1347,7 +1342,14 @@ app.get('/updateTokens', async (req, res) => {
     }
 });
 
-
+function requireAuth(req, res, next) {
+    if (req.session.user) {
+        return next();
+    } else {
+        req.flash('error', 'You need to log in to access this page');
+        res.redirect('/login');
+    }
+}
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
